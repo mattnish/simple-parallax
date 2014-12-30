@@ -37,53 +37,50 @@
     },
     scroll: function(){
       var yOffset = window.pageYOffset,
-          val     = (yOffset - this.starting)*this.rate;
+          val     = (yOffset - this.starting)*this.rate,
+          translateVal;
       if((this.max === 0) || (Math.abs(this.max) > val) && (yOffset > this.starting)){
-        this.$el.css({
-          '-webkit-transform':'translate3d(0,'+val+'px,0)',
-          '-moz-transform':'translate3d(0,'+val+'px,0)',
-          '-o-transform':'translate3d(0,'+val+'px,0)',
-          '-ms-transform':'translate3d(0,'+val+'px,0)',
-          'transform':'translate3d(0,'+val+'px,0)'
-        });
+        translateVal = val;
+      } else if (yOffset <= this.starting) {
+        translateVal = 0;
       } else {
-        this.$el.css({
-          '-webkit-transform':'translate3d(0,0,0)',
-          '-moz-transform':'translate3d(0,0,0)',
-          '-o-transform':'translate3d(0,0,0)',
-          '-ms-transform':'translate3d(0,0,0)',
-          'transform':'translate3d(0,0,0)'
-        });
+        translateVal = this.max;
       }
+      this.$el.css({
+        '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-o-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
+        'transform':'translate3d(0,'+translateVal+'px,0)'
+      });
     },
     scrollWithOpacity: function(){
       var yOffset = window.pageYOffset,
           val     = (yOffset - this.starting)*this.rate,
           opacity = 1 - (yOffset/this.opacitySpread),
-          opacity = (opacity < 0) ? 0 : opacity;
+          opacity = (opacity < 0) ? 0 : opacity,
+          translateVal,
+          opacityVal;
       if((this.max === 0) || (Math.abs(this.max) > val) && (yOffset > this.starting)){
-        this.$el.css({
-          '-webkit-transform':'translate3d(0,'+val+'px,0)',
-          '-moz-transform':'translate3d(0,'+val+'px,0)',
-          '-o-transform':'translate3d(0,'+val+'px,0)',
-          '-ms-transform':'translate3d(0,'+val+'px,0)',
-          'transform':'translate3d(0,'+val+'px,0)',
-          '-moz-opacity': opacity,
-          '-khtml-opacity': opacity,
-          'opacity': opacity
-        });
+        translateVal = val;
+        opacityVal = opacity;
+      } else if (yOffset <= this.starting) {
+        translateVal = 0;
+        opacityVal = 1;
       } else {
-        this.$el.css({
-          '-webkit-transform':'translate3d(0,0,0)',
-          '-moz-transform':'translate3d(0,0,0)',
-          '-o-transform':'translate3d(0,0,0)',
-          '-ms-transform':'translate3d(0,0,0)',
-          'transform':'translate3d(0,0,0)',
-          '-moz-opacity': 1,
-          '-khtml-opacity': 1,
-          'opacity': 1
-        });
+        translateVal = this.max;
+        opacityVal = 1;
       }
+      this.$el.css({
+        '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-o-transform':'translate3d(0,'+translateVal+'px,0)',
+        '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
+        'transform':'translate3d(0,'+translateVal+'px,0)',
+        '-moz-opacity': opacityVal,
+        '-khtml-opacity': opacityVal,
+        'opacity': opacityVal
+      });
     }
   };
 })(jQuery, window, document);
