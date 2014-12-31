@@ -25,12 +25,13 @@
   ParallaxScroll.prototype = {
     init: function(){
       var $window = $(window);
+      $window.off('scroll.parallaxScroll');
       if(this.opacity){
-        $window.scroll(function() {
+        $window.on('scroll.parallaxScroll',function() {
           $.throttle(150, false, this.scrollWithOpacity(), true);
         }.bind(this));
       } else {
-        $window.scroll(function() {
+        $window.on('scroll.parallaxScroll',function() {
           $.throttle(150, false, this.scroll(), true);
         }.bind(this));
       }
