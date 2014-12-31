@@ -18,6 +18,8 @@
     this.max        = options.max || 0;  // maximum pixel distance to translate the element
     this.starting   = options.starting || 0;  // pixel distance from top to start animation
 
+    this.currentVal = 0;
+
     if(!this.hasOwnProperty('id')) {
       inc++;
       this.id = inc;
@@ -54,13 +56,16 @@
       } else {
         translateVal = this.max;
       }
-      this.$el.css({
-        '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-o-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
-        'transform':'translate3d(0,'+translateVal+'px,0)'
-      });
+      if(this.currentVal !== translateVal){
+        this.currentVal = translateVal;
+        this.$el.css({
+          '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-o-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
+          'transform':'translate3d(0,'+translateVal+'px,0)'
+        });
+      }
     },
     scrollWithOpacity: function(){
       var yOffset = window.pageYOffset,
@@ -79,16 +84,19 @@
         translateVal = this.max;
         opacityVal = 1;
       }
-      this.$el.css({
-        '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-o-transform':'translate3d(0,'+translateVal+'px,0)',
-        '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
-        'transform':'translate3d(0,'+translateVal+'px,0)',
-        '-moz-opacity': opacityVal,
-        '-khtml-opacity': opacityVal,
-        'opacity': opacityVal
-      });
+      if(this.currentVal !== translateVal){
+        this.currentVal = translateVal;
+        this.$el.css({
+          '-webkit-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-moz-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-o-transform':'translate3d(0,'+translateVal+'px,0)',
+          '-ms-transform':'translate3d(0,'+translateVal+'px,0)',
+          'transform':'translate3d(0,'+translateVal+'px,0)',
+          '-moz-opacity': opacityVal,
+          '-khtml-opacity': opacityVal,
+          'opacity': opacityVal
+        });
+      }
     }
   };
 })(jQuery, window, document);
