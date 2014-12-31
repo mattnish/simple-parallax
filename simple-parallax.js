@@ -47,7 +47,7 @@
     },
     scroll: function(){
       var yOffset = window.pageYOffset,
-          val     = (yOffset - this.starting)*this.rate,
+          val     = parseInt((yOffset - this.starting)*this.rate, 10),
           translateVal;
       if((this.max === 0) || (Math.abs(this.max) > val) && (yOffset > this.starting)){
         translateVal = val;
@@ -69,7 +69,7 @@
     },
     scrollWithOpacity: function(){
       var yOffset = window.pageYOffset,
-          val     = (yOffset - this.starting)*this.rate,
+          val     = parseInt((yOffset - this.starting)*this.rate,10),
           opacity = 1 - (yOffset/this.opacitySpread),
           opacity = (opacity < 0) ? 0 : opacity,
           translateVal,
