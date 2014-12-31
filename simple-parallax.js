@@ -1,5 +1,6 @@
 ;(function ( $, window, document, undefined ) {
   //Parallax Background Image on Scroll
+  var inc = 0;
   $.fn.parallaxScroll = function(options){
     var options  = options || {};
     return this.each(function() {
@@ -16,6 +17,12 @@
     this.rate       = options.rate || .5;
     this.max        = options.max || 0;  // maximum pixel distance to translate the element
     this.starting   = options.starting || 0;  // pixel distance from top to start animation
+
+    if(!this.hasOwnProperty('id')) {
+      inc++;
+      this.id = inc;
+    }
+
     if(options.opacity){
       this.opacity        = true;
       this.opacitySpread  = options.opacitySpread || 500;
@@ -25,13 +32,13 @@
   ParallaxScroll.prototype = {
     init: function(){
       var $window = $(window);
-      $window.off('scroll.parallaxScroll');
+      $window.off('scroll.parallaxScroll'+this.id);
       if(this.opacity){
-        $window.on('scroll.parallaxScroll',function() {
+        $window.on('scroll.parallaxScroll'+this.id,function() {
           $.throttle(150, false, this.scrollWithOpacity(), true);
         }.bind(this));
       } else {
-        $window.on('scroll.parallaxScroll',function() {
+        $window.on('scroll.parallaxScroll'+this.id,function() {
           $.throttle(150, false, this.scroll(), true);
         }.bind(this));
       }
