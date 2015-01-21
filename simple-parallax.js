@@ -1,12 +1,15 @@
 ;(function ( $, window, document, undefined ) {
   //Parallax Background Image on Scroll
-  var inc = 0;
+  var inc = 0,
+      $window;
   $.fn.parallaxScroll = function(options){
     var options  = options || {};
     return this.each(function() {
       var $this    = $(this),
           data     = $this.data('plugin_parallaxScroll');
-      if(!data) {
+      if(data) {
+        $this.data('plugin_parallaxScroll').init(options);
+      } else {
         data = new ParallaxScroll(this, options);
         $this.data('plugin_parallaxScroll', data);
       }
@@ -16,7 +19,6 @@
     this.$el        = $(element);
     this.rate       = options.rate || .5;
     this.max        = options.max || 0;  // maximum pixel distance to translate the element
-    this.starting   = options.starting || 0;  // pixel distance from top to start animation
 
     this.currentVal = 0;
 
@@ -29,23 +31,58 @@
       this.opacity        = true;
       this.opacitySpread  = options.opacitySpread || 500;
     }
-    this.init();
+    this.init(options);
   };
   ParallaxScroll.prototype = {
-    init: function(){
-      var $window = $(window);
+    init: function(options){
+      $window = $(window);
+      var _this   = this;
+      this.starting = options.starting || 0;  // pixel distance from top of the element to start animation
+      if(this.starting !== 0){
+        this.starting = this.$el.offset().top + (this.starting);
+      }
+
+      this.destroy();
+      if(!this.isMobile()){
+        if(this.opacity){
+          this.scrollWithOpacity();
+          $window.on('scroll.parallaxScroll'+this.id,function() {
+            $.throttle(150, false, _this.scrollWithOpacity(), true);
+          }.bind(this));
+        } else {
+          this.scroll();
+          $window.on('scroll.parallaxScroll'+this.id,function() {
+            $.throttle(150, false, _this.scroll(), true);
+          }.bind(this));
+        }
+      }
+    },
+    destroy: function(){
+      var _this   = this;
       $window.off('scroll.parallaxScroll'+this.id);
       if(this.opacity){
-        $window.on('scroll.parallaxScroll'+this.id,function() {
-          $.throttle(150, false, this.scrollWithOpacity(), true);
-        }.bind(this));
+        this.$el.css({
+          '-webkit-transform':'',
+          '-moz-transform':'',
+          '-o-transform':'',
+          '-ms-transform':'',
+          'transform':'',
+          '-moz-opacity': '',
+          '-khtml-opacity': '',
+          'opacity': ''
+        });
       } else {
-        $window.on('scroll.parallaxScroll'+this.id,function() {
-          $.throttle(150, false, this.scroll(), true);
-        }.bind(this));
+        this.$el.css({
+          '-webkit-transform':'',
+          '-moz-transform':'',
+          '-o-transform':'',
+          '-ms-transform':'',
+          'transform':''
+        });
       }
     },
     scroll: function(){
+      var _this   = this;
       var yOffset = window.pageYOffset,
           val     = parseInt((yOffset - this.starting)*this.rate, 10),
           translateVal;
@@ -68,6 +105,7 @@
       }
     },
     scrollWithOpacity: function(){
+      var _this   = this;
       var yOffset = window.pageYOffset,
           val     = parseInt((yOffset - this.starting)*this.rate,10),
           opacity = 1 - (yOffset/this.opacitySpread),
@@ -97,6 +135,20 @@
           'opacity': opacityVal
         });
       }
+    },
+    isMobile: function(){
+      if (window.navigator.appName === "Microsoft Internet Explorer") {
+        return document.documentMode < 8;
+      }
+      if (/iP(od|hone)/i.test(window.navigator.userAgent)) {
+        return true;
+      }
+      if (/Android/i.test(window.navigator.userAgent)) {
+        if (/Mobile/i.test(window.navigator.userAgent)) {
+          return true;
+        }
+      }
+      return false;
     }
   };
 })(jQuery, window, document);
