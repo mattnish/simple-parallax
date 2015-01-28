@@ -120,7 +120,7 @@
         opacityVal = 1;
       } else {
         translateVal = this.max;
-        opacityVal = 1;
+        opacityVal = 0;
       }
       if(this.currentVal !== translateVal){
         this.currentVal = translateVal;
@@ -137,6 +137,9 @@
       }
     },
     isMobile: function(){
+      if($(window).width() < 768) {
+        return true;
+      }
       if (window.navigator.appName === "Microsoft Internet Explorer") {
         return document.documentMode < 8;
       }
